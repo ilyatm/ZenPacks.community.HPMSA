@@ -1,0 +1,343 @@
+name: ZenPacks.community.HPMSA
+
+zProperties:
+  zHPMSAControllers:
+    category: HP MSA
+    type: lines
+
+  zHPMSAUser:
+    category: HP MSA
+    type: string
+
+  zHPMSAPassword:
+    category: HP MSA
+    type: password
+
+  zHPMSASecureConnection:
+    category: HP MSA
+    type: boolean
+    default: true
+
+device_classes:
+  /Storage/HP/MSA:
+    remove: true
+    zProperties:
+      zPythonClass: ZenPacks.community.HPMSA.HPMSA
+      zSnmpMonitorIgnore: true
+      zPingMonitorIgnore: true
+      zCollectorPlugins:
+        - community.api.hpmsa
+
+    templates:
+      Enclosure:
+        description: HP MSA Enclosure Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Enclosure
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      PowerSupply:
+        description: HP MSA Power Supply Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Powersup
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      Controller:
+        description: HP MSA Controller Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Controller
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      HardDisk:
+        description: HP MSA HDD Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Disk
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      HostPort:
+        description: HP MSA HostPort Template.
+        targetPythonClass: ZenPacks.community.HPMSA.HostPort
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      ExpansionPort:
+        description: HP MSA Export Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Export
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      ManagementPort:
+        description: HP MSA Network Port Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Nwport
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              health-numeric: GAUGE
+
+      IOModule:
+        description: HP MSA In/Out Module Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Iomod
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      CompactFlash:
+        description: HP MSA Compact Flash Module Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Compflash
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      VirtualDisk:
+        description: HP MSA Virtual Disk Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Virtualdisk
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              status-numeric: GAUGE
+              health-numeric: GAUGE
+
+      Volume:
+        description: HP MSA Volume Template.
+        targetPythonClass: ZenPacks.community.HPMSA.Volume
+        datasources:
+          conditions:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
+            cycletime: "60"
+            datapoints:
+              health-numeric: GAUGE
+
+classes:
+  HPMSA:
+    base: [zenpacklib.Device]
+    label: HP MSA Device
+
+  Enclosure:
+    base: [zenpacklib.Component]
+    label: Enclosure
+    order: 10
+    properties:
+      enclosure-wwn:
+        label: WWN
+      description:
+        label: Description
+      status-numeric:
+        label: Status
+        type: int
+        order: 80
+        enum: {0: "Unsupported", 1: "Up", 2: "Error", 3: "Warning", 4: "Unrecoverable", 5: "Not Present", 6: "Unknown", 7: "Unavailable", 20: "Spun Down" }
+      health-numeric:
+        label: Health
+        type: int
+        order: 85
+        enum: {0: "OK", 1: "Degraded", 2: "Fault", 3: "Unknown"}
+
+  PowerSupply:
+    base: [zenpacklib.Component]
+    label: Power Supply
+    order: 12
+    properties:
+      status-numeric:
+        label: Status
+        order: 80
+      health-numeric:
+        label: Health
+        order: 85
+
+  Controller:
+    base: [zenpacklib.Component]
+    label: Controller
+    order: 11
+    properties:
+      wwn:
+        label: WWN
+      description:
+        label: Description
+      status-numeric:
+        label: Status
+        type: int
+        order: 80
+        enum: {0: "Operational", 1: "Down", 2: "Not installed", 3: "Unknown"}
+      health-numeric:
+        label: Health
+        type: int
+        order: 85
+        enum: {0: "OK", 1: "Degraded", 2: "Fault", 3: "Unknown"}
+
+  HardDisk:
+    base: [zenpacklib.Component]
+    label: HDD
+    order: 13
+    properties:
+      size:
+        label: Size
+      usage:
+        label: Usage
+      health-numeric:
+        label: Health
+        order: 85
+
+  HostPort:
+    base: [zenpacklib.Component]
+    label: Host Port
+    order: 19
+    properties:
+      port-type:
+        label: Type
+      actual-speed:
+        label: Speed
+      status-numeric:
+        label: Status
+        order: 80
+      health-numeric:
+        label: Health
+        order: 85
+
+  ExpansionPort:
+    base: [zenpacklib.Component]
+    label: Expansion Port
+    order: 18
+    properties:
+      sas-port-type:
+        label: Type
+      status-numeric:
+        label: Status
+        order: 80
+      health-numeric:
+        label: Health
+        order: 85
+
+  ManagementPort:
+    base: [zenpacklib.Component]
+    label: Management Port
+    order: 17
+    properties:
+      ip-address:
+        label: IP
+      link-speed:
+        label: Speed
+      health-numeric:
+        label: Health
+        order: 85
+
+  InoutModule:
+    base: [zenpacklib.Component]
+    label: IO Module
+    order: 16
+    properties:
+      description:
+        label: Description
+      status-numeric:
+        label: Status
+        order: 80
+      health-numeric:
+        label: Health
+        order: 85
+
+  CompactFlash:
+    base: [zenpacklib.Component]
+    label: Compact Flash
+    order: 20
+    properties:
+      cache-flush:
+        label: Cache Flush
+      status-numeric:
+        label: Status
+        order: 80
+      health-numeric:
+        label: Health
+        order: 85
+
+  VirtualDisk:
+    base: [zenpacklib.Component]
+    label: Virtual Disk
+    order: 14
+    properties:
+      size:
+        label: Size
+      raidtype:
+        label: RAID
+      status-numeric:
+        label: Status
+        order: 80
+      health-numeric:
+        label: Health
+        order: 85
+
+  Volume:
+    base: [zenpacklib.Component]
+    label: Volume
+    order: 15
+    properties:
+      size:
+        label: Size
+      owner:
+        label: Current Owner
+      health-numeric:
+        label: Health
+        order: 85
+
+class_relationships:
+  - HPMSA 1:MC Enclosure
+  - HPMSA 1:MC Controller
+  - HPMSA 1:MC VirtualDisk
+  - HPMSA 1:MC Volume
+  - Enclosure 1:MC ExpansionPort
+  - Enclosure 1:MC PowerSupply
+  - Enclosure 1:MC HardDisk
+  - Enclosure 1:MC InoutModule
+  - Controller 1:MC ManagementPort
+  - Controller 1:MC HostPort
+  - Controller 1:MC CompactFlash

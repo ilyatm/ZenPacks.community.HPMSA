@@ -1,0 +1,18 @@
+*.py[cod]
+
+# editors
+*.swp
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+
+.DS_Store
+
+.idea/
+.pydevproject
+.project
+
