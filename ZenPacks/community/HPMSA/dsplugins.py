@@ -1,8 +1,7 @@
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.web.client import getPage
 from pprint import pprint
-import hashlib
-# import xml.etree.ElementTree as ET
+
 from datetime import datetime
 from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
     PythonDataSourcePlugin,
