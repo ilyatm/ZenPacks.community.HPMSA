@@ -67,7 +67,7 @@ device_classes:
 
       HardDisk:
         description: HP MSA HDD Template.
-        targetPythonClass: ZenPacks.community.HPMSA.Disk
+        targetPythonClass: ZenPacks.community.HPMSA.HardDisk
         datasources:
           conditions:
             type: Python
