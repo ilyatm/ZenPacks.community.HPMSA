@@ -10,7 +10,7 @@ from ZenPacks.community.HPMSA.schemas import (
 from ZenPacks.community.HPMSA.msaauth import authMsa
 from ZenPacks.community.HPMSA.xmltricks import (
     get_product_version,
-    get_properties,
+    get_map,
     )
 
 
@@ -73,7 +73,7 @@ class hpmsa(PythonPlugin):
                     .format(protocol, ip, cmd),
                     headers={"sessionKey": '{0}'.format(sessionkey)}
                     )
-                results[componentclass] = get_properties(xml, componentclass)
+                results[componentclass] = get_map(xml, componentclass)
 
             returnValue(results)
 
