@@ -8,7 +8,7 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
     )
 from ZenPacks.community.HPMSA.xmltricks import (
     get_health_status,
-    parsexml,
+    get_map,
     )
 from ZenPacks.community.HPMSA.schemas import (
     device_map,
@@ -52,6 +52,7 @@ class Conditions(PythonDataSourcePlugin):
         ip, sessionkey = authMsa(controllers, protocol, user, password, LOG)
 
         data = self.new_data()
+        results = {}
         if ip is None:
             LOG.error('%s: Can\'t authenticate, check settings...', config)
             data['events'].append({
@@ -64,15 +65,28 @@ class Conditions(PythonDataSourcePlugin):
                 })
             returnValue(None)
         else:
-            for component in device_map.keys():
-                cmd = device_map[component]['xml_obj_command']
+            for componentclass in device_map.keys():
+                cmd = device_map[componentclass]['xml_obj_command']
                 xml = yield getPage(
                     '{0}://{1}/api/show/{2}'
                     .format(protocol, ip, cmd),
                     headers={"sessionKey": '{0}'.format(sessionkey)}
                     )
-                print component
-                pprint(parsexml(xml, component))
-            # for datasource in config.datasources:
+                results[componentclass] = get_map(xml, componentclass, True)
+            pprint(results)
+            for datasource in config.datasources:
+                print datasource.component
+
+                # cmd = device_map[datasource.template]['xml_obj_command']
+                # xml = yield getPage(
+                #     '{0}://{1}/api/show/{2}'
+                #     .format(protocol, ip, cmd),
+                #     headers={"sessionKey": '{0}'.format(sessionkey)}
+                #     )
+                # print datasource.template, datasource.component
+                # print get_properties(xml, datasource.template)
+                # print "\n"
+                # for dp in datasource.points:
+                #     print dp.id
 
         returnValue(None)
