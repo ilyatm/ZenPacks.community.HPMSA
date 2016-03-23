@@ -37,9 +37,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       PowerSupply:
         description: HP MSA Power Supply Template.
@@ -49,9 +46,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       Controller:
         description: HP MSA Controller Template.
@@ -61,9 +55,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       HardDisk:
         description: HP MSA HDD Template.
@@ -73,9 +64,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       HostPort:
         description: HP MSA HostPort Template.
@@ -85,9 +73,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       ExpansionPort:
         description: HP MSA Export Template.
@@ -97,9 +82,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       ManagementPort:
         description: HP MSA Network Port Template.
@@ -109,8 +91,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              health-numeric: GAUGE
 
       IOModule:
         description: HP MSA In/Out Module Template.
@@ -120,9 +100,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       CompactFlash:
         description: HP MSA Compact Flash Module Template.
@@ -132,9 +109,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       VirtualDisk:
         description: HP MSA Virtual Disk Template.
@@ -144,9 +118,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              status-numeric: GAUGE
-              health-numeric: GAUGE
 
       Volume:
         description: HP MSA Volume Template.
@@ -156,8 +127,6 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
-            datapoints:
-              health-numeric: GAUGE
 
 classes:
   HPMSA:
@@ -173,26 +142,22 @@ classes:
         label: WWN
       description:
         label: Description
-      status-numeric:
+      status:
         label: Status
-        type: int
         order: 80
-        enum: {0: "Unsupported", 1: "Up", 2: "Error", 3: "Warning", 4: "Unrecoverable", 5: "Not Present", 6: "Unknown", 7: "Unavailable", 20: "Spun Down" }
-      health-numeric:
+      health:
         label: Health
-        type: int
         order: 85
-        enum: {0: "OK", 1: "Degraded", 2: "Fault", 3: "Unknown"}
 
   PowerSupply:
     base: [zenpacklib.Component]
     label: Power Supply
     order: 12
     properties:
-      status-numeric:
+      status:
         label: Status
         order: 80
-      health-numeric:
+      health:
         label: Health
         order: 85
 
@@ -205,16 +170,12 @@ classes:
         label: WWN
       description:
         label: Description
-      status-numeric:
+      status:
         label: Status
-        type: int
         order: 80
-        enum: {0: "Operational", 1: "Down", 2: "Not installed", 3: "Unknown"}
-      health-numeric:
+      health:
         label: Health
-        type: int
         order: 85
-        enum: {0: "OK", 1: "Degraded", 2: "Fault", 3: "Unknown"}
 
   HardDisk:
     base: [zenpacklib.Component]
@@ -225,7 +186,7 @@ classes:
         label: Size
       usage:
         label: Usage
-      health-numeric:
+      health:
         label: Health
         order: 85
 
@@ -238,10 +199,10 @@ classes:
         label: Type
       actual-speed:
         label: Speed
-      status-numeric:
+      status:
         label: Status
         order: 80
-      health-numeric:
+      health:
         label: Health
         order: 85
 
@@ -252,10 +213,10 @@ classes:
     properties:
       sas-port-type:
         label: Type
-      status-numeric:
+      status:
         label: Status
         order: 80
-      health-numeric:
+      health:
         label: Health
         order: 85
 
@@ -268,7 +229,7 @@ classes:
         label: IP
       link-speed:
         label: Speed
-      health-numeric:
+      health:
         label: Health
         order: 85
 
@@ -279,10 +240,10 @@ classes:
     properties:
       description:
         label: Description
-      status-numeric:
+      status:
         label: Status
         order: 80
-      health-numeric:
+      health:
         label: Health
         order: 85
 
@@ -293,10 +254,10 @@ classes:
     properties:
       cache-flush:
         label: Cache Flush
-      status-numeric:
+      status:
         label: Status
         order: 80
-      health-numeric:
+      health:
         label: Health
         order: 85
 
@@ -309,10 +270,10 @@ classes:
         label: Size
       raidtype:
         label: RAID
-      status-numeric:
+      status:
         label: Status
         order: 80
-      health-numeric:
+      health:
         label: Health
         order: 85
 
@@ -325,7 +286,7 @@ classes:
         label: Size
       owner:
         label: Current Owner
-      health-numeric:
+      health:
         label: Health
         order: 85
 
