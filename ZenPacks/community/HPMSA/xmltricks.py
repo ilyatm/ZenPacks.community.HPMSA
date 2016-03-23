@@ -80,13 +80,15 @@ def parsexml(xml, componentclass):
     return results
 
 
-def get_properties(xml, componentclass):
+def get_map(xml, componentclass, health=False):
     relation = device_map[componentclass]['xml_obj_relation']
     id = device_map[componentclass]['xml_obj_id']
-    attributes = device_map[componentclass]['xml_obj_attributes']
     pattern = device_map[componentclass]['xml_obj_relation_pattern']
     title = device_map[componentclass]['xml_obj_title']
-
+    if health:
+        attributes = ['health', 'status', 'health-reason']
+    else:
+        attributes = device_map[componentclass]['xml_obj_attributes']
     components = parsexml(xml, componentclass)
     results = {}
 
@@ -97,7 +99,10 @@ def get_properties(xml, componentclass):
             'id': component[id],
         }
         for a in attributes:
-            props.update({a: component[a]})
+            try:
+                props.update({a: component[a]})
+            except:
+                pass
 
         if relid in results:
             results[relid].append(props)
