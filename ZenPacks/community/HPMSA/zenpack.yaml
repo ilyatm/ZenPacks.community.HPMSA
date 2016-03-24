@@ -179,7 +179,7 @@ classes:
 
   HardDisk:
     base: [zenpacklib.Component]
-    label: HDD
+    label: Hard Disk
     order: 13
     properties:
       size:
