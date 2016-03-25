@@ -13,20 +13,19 @@ def authMsa(controllers, protocol, user, password, log):
             keypage = urllib2.urlopen(
                 '{0}://{1}/api/login/{2}'.format(protocol, ip, auth),
                 timeout=10
-                ).read()
-
-            response = ET.fromstring(keypage)[0][2].text
-
-            if response != 'Authentication Unsuccessful':
-                goodip = ip
-                sessionkey = response
-                # log.info("Controller ip - %s, got valid sessionkey", ip)
-                break
-
+                )
         except urllib2.URLError, e:
             log.warning(
-                'Controller ip - %s, exception %s trying next ip if exist...',
+                'Controller ip - %s, exception %s get next.',
                 ip, e)
             continue
+
+        response = ET.fromstring(keypage.read())[0][2].text
+
+        if response != 'Authentication Unsuccessful':
+            goodip = ip
+            sessionkey = response
+            # log.info("Controller ip - %s, got valid sessionkey", ip)
+            break
 
     return goodip, sessionkey
