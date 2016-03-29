@@ -5,32 +5,6 @@ from ZenPacks.community.HPMSA.schemas import device_map
 import xml.etree.ElementTree as ET
 
 
-def get_health_status(xmlobj, id, relationId,
-                      relationPattern, relname, modname, compname):
-    props = {}
-    relid = None
-
-    for xmlprop in xmlobj.findall(".PROPERTY"):
-        if xmlprop.attrib['name'] == relationId:
-            if relationPattern:
-                m = re.search(relationPattern, xmlprop.text)
-                if m:
-                    props['compname'] = compname + prepId(m.group(1).upper())
-            else:
-                props['compname'] = compname + xmlprop.text
-
-        if xmlprop.attrib['name'] == id:
-            relid = xmlprop.text
-        if xmlprop.attrib['name'] == 'health-numeric':
-            props['health-numeric'] = xmlprop.text
-        if xmlprop.attrib['name'] == 'status-numeric':
-            props['status-numeric'] = xmlprop.text
-
-        props['relname'] = relname
-        props['modname'] = modname
-    return relid, props
-
-
 def get_instance_statistic(xmlobj, compid, pattern):
     props = {}
     id = None
@@ -80,33 +54,70 @@ def parsexml(xml, componentclass):
     return results
 
 
-def get_map(xml, componentclass, health=False):
-    relation = device_map[componentclass]['xml_obj_relation']
-    id = device_map[componentclass]['xml_obj_id']
-    pattern = device_map[componentclass]['xml_obj_relation_pattern']
-    title = device_map[componentclass]['xml_obj_title']
-    if health:
-        attributes = ['health', 'status', 'health-reason']
-    else:
-        attributes = device_map[componentclass]['xml_obj_attributes']
+def get_relations(xml, componentclass):
+    xml_relation = device_map[componentclass]['xml_obj_relation']
+    xml_id = device_map[componentclass]['xml_obj_id']
+    xml_rel_pattern = device_map[componentclass]['xml_obj_relation_pattern']
+    xml_title = device_map[componentclass]['xml_obj_title']
+    xml_attributes = device_map[componentclass]['xml_obj_attributes']
+
     components = parsexml(xml, componentclass)
     results = {}
 
     for component in components:
-        relid = apply_pattern(component.get(relation), pattern)
+        relation = apply_pattern(component.get(xml_relation), xml_rel_pattern)
         props = {
-            'title': component[title],
-            'id': component[id],
+            'title': component.get(xml_title),
+            'id': component.get(xml_id),
         }
-        for a in attributes:
-            try:
-                props.update({a: component[a]})
-            except:
-                pass
+        for a in xml_attributes:
+            props.update({a: component.get(a)})
 
-        if relid in results:
-            results[relid].append(props)
+        if relation in results:
+            results[relation].append(props)
         else:
-            results[relid] = [props]
+            results[relation] = [props]
+
+    return results
+
+
+def get_health(xml, componentclass):
+    severitys = {
+        'Degraded': 'Error',
+        'Fault': 'Critical',
+        'Unknown': 'Warning',
+        'N/A': 'Info',
+        'OK': None,
+        }
+    xml_relation = device_map[componentclass]['xml_obj_relation']
+    xml_id = device_map[componentclass]['xml_obj_id']
+    xml_rel_pattern = device_map[componentclass]['xml_obj_relation_pattern']
+    relname = device_map[componentclass]['relname']
+    modname = device_map[componentclass]['modname']
+    compname = device_map[componentclass]['compname']
+    # xml_attributes = ['health', 'status', 'health-reason']
+
+    components = parsexml(xml, componentclass)
+    results = {}
+    for component in components:
+        id = component.get(xml_id)
+        relation = apply_pattern(component.get(xml_relation), xml_rel_pattern)
+        cmpname = compname + relation if compname else None
+        props = {
+            'compname': cmpname,
+            'relname': relname,
+            'modname': modname,
+            'health': component.get('health'),
+            'health-reason': component.get('health-reason'),
+            'health-recommendation': component.get('health-recommendation'),
+            'status': component.get('status'),
+            'severity': severitys[component.get('health')]
+        }
+
+        results[id] = props
+        # if id in results:
+        #     results[id].append(props)
+        # else:
+        #     results[id] = [props]
 
     return results

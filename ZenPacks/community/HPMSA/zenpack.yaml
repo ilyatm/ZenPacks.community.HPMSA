@@ -38,9 +38,9 @@ device_classes:
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "60"
 
-      PowerSupply:
+      PowerSupp:
         description: HP MSA Power Supply Template.
-        targetPythonClass: ZenPacks.community.HPMSA.Powersup
+        targetPythonClass: ZenPacks.community.HPMSA.Powersupp
         datasources:
           conditions:
             type: Python
@@ -149,9 +149,9 @@ classes:
         label: Health
         order: 85
 
-  PowerSupply:
+  PowerSupp:
     base: [zenpacklib.Component]
-    label: Power Supply
+    label: Power Supp
     order: 12
     properties:
       status:
@@ -296,7 +296,7 @@ class_relationships:
   - HPMSA 1:MC VirtualDisk
   - HPMSA 1:MC Volume
   - Enclosure 1:MC ExpansionPort
-  - Enclosure 1:MC PowerSupply
+  - Enclosure 1:MC PowerSupp
   - Enclosure 1:MC HardDisk
   - Enclosure 1:MC InoutModule
   - Controller 1:MC ManagementPort

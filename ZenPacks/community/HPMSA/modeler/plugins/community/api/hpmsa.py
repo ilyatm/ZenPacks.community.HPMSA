@@ -3,15 +3,7 @@ from Products.DataCollector.plugins.DataMaps import RelationshipMap, ObjectMap
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.web.client import getPage
 from pprint import pprint
-from ZenPacks.community.HPMSA.schemas import (
-    device_map,
-    modeller_order,
-    )
-from ZenPacks.community.HPMSA.msaauth import authMsa
-from ZenPacks.community.HPMSA.xmltricks import (
-    get_product_version,
-    get_map,
-    )
+from ZenPacks.community.HPMSA.msaapi import msaapi
 
 
 class hpmsa(PythonPlugin):
@@ -50,30 +42,34 @@ class hpmsa(PythonPlugin):
         secure = getattr(device, 'zHPMSASecureConnection', None)
         protocol = 'https' if secure else 'http'
 
-        ip, sessionkey = authMsa(controllers, protocol, user, password, log)
-
+        api = msaapi(controllers, protocol, user, password, log)
+        self.device_map = api.get_devicemap()
+        self.modeller_order = api.get_modeller_order()
         results = {}
 
-        if ip is None:
-            log.error('%s can\'t authenticate...', device.id)
+        if api.get_url() is None:
             returnValue(None)
         else:
-            msa_version = yield getPage(
-                '{0}://{1}/api/show/{2}'
-                .format(protocol, ip, 'system'),
-                headers={"sessionKey": "{0}".format(sessionkey)}
-                )
+            url = api.get_url()
+            headers = api.get_headers()
+            try:
+                xml = yield getPage(url+'system', headers=headers)
+            except Exception, e:
+                log.error("%s: %s", device.id, e)
 
-            version = get_product_version(msa_version)
-            results['product_version'] = version
-            for componentclass in device_map.keys():
-                cmd = device_map[componentclass]['xml_obj_command']
-                xml = yield getPage(
-                    '{0}://{1}/api/show/{2}'
-                    .format(protocol, ip, cmd),
-                    headers={"sessionKey": '{0}'.format(sessionkey)}
-                    )
-                results[componentclass] = get_map(xml, componentclass)
+            if xml:
+                results['product_version'] = api.get_msa_version(xml)
+
+            for componentclass in self.device_map:
+                cmd = self.device_map[componentclass]['xml_obj_command']
+                try:
+                    xml = yield getPage(url+cmd, headers=headers)
+                except Exception, e:
+                    log.error("%s: %s", device.id, e)
+                if xml:
+                    results[componentclass] = api.get_relation(
+                        xml, componentclass
+                        )
 
             returnValue(results)
 
@@ -82,19 +78,19 @@ class hpmsa(PythonPlugin):
         rm.append(ObjectMap({
             'product_version': results['product_version']
         }))
-        for key in modeller_order:
+        for key in self.modeller_order:
             for itemid in results[key]:
                 if itemid is not None:
                     rm.append(RelationshipMap(
-                        compname=device_map[key]['compname']+itemid,
-                        relname=device_map[key]['relname'],
-                        modname=device_map[key]['modname'],
+                        compname=self.device_map[key]['compname']+itemid,
+                        relname=self.device_map[key]['relname'],
+                        modname=self.device_map[key]['modname'],
                         objmaps=results[key][itemid],
                         ))
                 else:
                     rm.append(RelationshipMap(
-                        relname=device_map[key]['relname'],
-                        modname=device_map[key]['modname'],
+                        relname=self.device_map[key]['relname'],
+                        modname=self.device_map[key]['modname'],
                         objmaps=results[key][itemid],
                         ))
         return rm
