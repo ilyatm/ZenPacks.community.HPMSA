@@ -7,7 +7,7 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
     PythonDataSourcePlugin,
     )
 from Products.DataCollector.plugins.DataMaps import ObjectMap
-from ZenPacks.community.HPMSA.msaapi import msaapi
+from ZenPacks.community.HPMSA.msaapi import msaapi, get_devicemap
 import logging
 
 LOG = logging.getLogger('zen.HPMSA')
@@ -22,7 +22,7 @@ class HPMSADS(PythonDataSourcePlugin):
         return (
             context.device().id,
             datasource.getCycleTime(context),
-            'hpmsa-health',
+            'hpmsa-{tag}'.format(tag=cls.TAG),
             )
 
     @classmethod
@@ -50,6 +50,13 @@ class HPMSADS(PythonDataSourcePlugin):
 class Conditions(HPMSADS):
 
     TAG = 'conditions'
+    severities = {
+        'Degraded': 'Error',
+        'Fault': 'Critical',
+        'Unknown': 'Warning',
+        'N/A': 'Info',
+        'OK': None,
+        }
 
     @inlineCallbacks
     def collect(self, config):
@@ -69,54 +76,96 @@ class Conditions(HPMSADS):
             returnValue(None)
         else:
             headers = api.get_headers()
-            devicemap = api.get_devicemap()
+            devicemap = get_devicemap()
             results = {}
-            for componentclass in devicemap.keys():
-                cmd = devicemap[componentclass]['xml_obj_command']
-                xml = yield getPage(url+cmd, headers=headers)
-
-                results[componentclass] = api.get_conditions(xml, componentclass)
+            for cc, props in devicemap.items():
+                cmd = props.get('xml_obj_command')
+                try:
+                    xml = yield getPage(url+cmd, headers=headers)
+                except Exception, e:
+                    log.error("%s: %s", device.id, e)
+                if xml:
+                    results[cc] = api.get_conditions(xml, cc)
 
         for datasource in config.datasources:
             dt = datasource.template
             dc = datasource.component
-            health = results[dt][dc]['health']
-            healthreason = results[dt][dc]['health-reason']
-            healthrecommendation = results[dt][dc]['health-recommendation']
-            status = results[dt][dc]['status']
-            compname = results[dt][dc]['compname']
-            relname = results[dt][dc]['relname']
-            modname = results[dt][dc]['modname']
-            se = results[dt][dc]['modname']
 
-            if compname:
-                data['maps'].append(
-                    ObjectMap({
-                        'relname': relname,
-                        'modname': modname,
-                        'compname': compname,
-                        'id': dc,
-                        'health': health,
-                        'status': status,
-                        }))
-            else:
-                data['maps'].append(
-                    ObjectMap({
-                        'relname': relname,
-                        'modname': modname,
-                        'id': dc,
-                        'health': health,
-                        'status': status,
-                        }))
+            data['maps'].append(ObjectMap(
+                data=results[dt][dc]['data'],
+                compname=results[dt][dc]['compname'],
+                modname=results[dt][dc]['modname'],
+                ))
+
+            health = results[dt][dc]['data']['health']
+            severity = self.severities[health]
             if health != 'OK':
                 data['events'].append({
                     'device': config.id,
                     'component': datasource.component,
-                    'severity': results[dt][dc]['severity'],
-                    'eventKey': 'hpmsa-alert',
-                    'eventClassKey': 'hpmsa-alert',
-                    'summary': results[dt][dc]['health-reason'],
-                    'message': results[dt][dc]['health-recommendation'],
+                    'severity': self.severities[health],
+                    'eventKey': 'hpmsa-conditions',
+                    'eventClassKey': 'hpmsa',
+                    'summary': results[dt][dc]['hrea'],
+                    'message': results[dt][dc]['hrec'],
                     })
+
+        returnValue(data)
+
+
+class Events(HPMSADS):
+
+    TAG = 'Events'
+
+    @inlineCallbacks
+    def collect(self, config):
+        api = self.apiconnect(config)
+        url = api.get_url()
+        data = self.new_data()
+        if url is None:
+            LOG.error('%s: Can\'t authenticate, check settings...', config)
+            data['events'].append({
+                'device': config.id,
+                'severity': 'Error',
+                'eventKey': 'hpmsa-conditions',
+                'eventClassKey': 'hpmsa-conditions',
+                'summary': 'Can not connect',
+                'message': 'Can not authenticate, check settings...',
+                })
+            returnValue(None)
+        else:
+            headers = api.get_headers()
+
+        for datasource in config.datasources:
+            print datasource
+
+        returnValue(data)
+
+
+class Statistic(HPMSADS):
+
+    TAG = 'Statistic'
+
+    @inlineCallbacks
+    def collect(self, config):
+        api = self.apiconnect(config)
+        url = api.get_url()
+        data = self.new_data()
+        if url is None:
+            LOG.error('%s: Can\'t authenticate, check settings...', config)
+            data['events'].append({
+                'device': config.id,
+                'severity': 'Error',
+                'eventKey': 'hpmsa-conditions',
+                'eventClassKey': 'hpmsa-conditions',
+                'summary': 'Can not connect',
+                'message': 'Can not authenticate, check settings...',
+                })
+            returnValue(None)
+        else:
+            headers = api.get_headers()
+
+        for datasource in config.datasources:
+            print datasource
 
         returnValue(data)

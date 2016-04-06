@@ -5,33 +5,37 @@ import re
 import os
 import xml.etree.ElementTree as ET
 from Products.ZenUtils.Utils import prepId
+import pdb
+from pprint import pprint
+
+modeller_order = [
+    'Enclosure',
+    'Controller',
+    'VirtualDisk',
+    'PowerSupp',
+    'HardDisk',
+    'Volume',
+    'HostPort',
+    'ExpansionPort',
+    'ManagementPort',
+    'InoutModule',
+    'CompactFlash'
+    ]
+
+
+def get_devicemap():
+    with open(os.path.dirname(__file__)+"/devicemap.yaml", 'r') as stream:
+        try:
+            return yaml.load(stream)
+        except yaml.YAMLError as exc:
+            return None
 
 
 class msaapi:
     """HP MSA API Class """
-    modeller_order = [
-        'Enclosure',
-        'Controller',
-        'VirtualDisk',
-        'PowerSupp',
-        'HardDisk',
-        'Volume',
-        'HostPort',
-        'ExpansionPort',
-        'ManagementPort',
-        'InoutModule',
-        'CompactFlash'
-    ]
-
     def __init__(self, iplist, protocol, user, password, log):
-        auth = hashlib.md5(user+"_"+password).hexdigest()
-
-        with open(os.path.dirname(__file__)+"/devicemap.yaml", 'r') as stream:
-            try:
-                self.devicemap = yaml.load(stream)
-            except yaml.YAMLError as exc:
-                print(exc)
         self.errors = []
+        auth = hashlib.md5(user+"_"+password).hexdigest()
         for ip in iplist:
             try:
                 url = '{0}://{1}/api/login/{2}'.format(protocol, ip, auth)
@@ -57,12 +61,6 @@ class msaapi:
     def get_headers(self):
         return self.headers
 
-    def get_devicemap(self):
-        return self.devicemap
-
-    def get_modeller_order(self):
-        return self.modeller_order
-
     def get_msa_version(self, xml):
         xml = ET.fromstring(xml)
         version = None
@@ -73,26 +71,20 @@ class msaapi:
         return version
 
     def get_relation(self, xml, componentclass):
-        cc = self.devicemap[componentclass]
-        xml_relation = cc['xml_obj_relation']
-        xml_id = cc['xml_obj_id']
-        xml_rel_pattern = cc['xml_obj_relation_pattern']
-        xml_title = cc['xml_obj_title']
-        xml_attributes = cc['xml_obj_attributes']
-        xml_obj_filter = cc['xml_obj_filter']
-
-        components = self.parsexml(xml, xml_obj_filter)
+        devicemap = get_devicemap()
+        xml_attrs = devicemap.get(componentclass)
+        components = self.parsexml(xml, xml_attrs.get('xml_obj_filter'))
         results = {}
-
         for component in components:
             relation = self.apply_pattern(
-                component.get(xml_relation), xml_rel_pattern
+                component.get(xml_attrs.get('xml_obj_relation'), ''),
+                xml_attrs.get('xml_obj_relation_pattern'),
                 )
             props = {
-                'title': component.get(xml_title),
-                'id': component.get(xml_id),
+                'title': component.get(xml_attrs.get('xml_obj_title')),
+                'id': prepId(component.get(xml_attrs.get('xml_obj_id'))),
             }
-            for a in xml_attributes:
+            for a in xml_attrs.get('xml_obj_attributes'):
                 props.update({a: component.get(a)})
 
             if relation in results:
@@ -115,51 +107,39 @@ class msaapi:
         return results
 
     def apply_pattern(self, value, pattern):
-        result = None
         if pattern:
             m = re.search(pattern, value)
             if m:
-                result = prepId(m.group(1).upper())
+                return prepId(m.group(1).upper())
         else:
-            result = value
-
-        return result
+            return value
 
     def get_conditions(self, xml, componentclass):
-        severitys = {
-            'Degraded': 'Error',
-            'Fault': 'Critical',
-            'Unknown': 'Warning',
-            'N/A': 'Info',
-            'OK': None,
-            }
-        cc = self.devicemap[componentclass]
-        xml_relation = cc['xml_obj_relation']
-        xml_id = cc['xml_obj_id']
-        xml_rel_pattern = cc['xml_obj_relation_pattern']
-        relname = cc['relname']
-        modname = cc['modname']
-        compname = cc['compname']
-        xml_obj_filter = cc['xml_obj_filter']
-
-        components = self.parsexml(xml, xml_obj_filter)
+        devicemap = get_devicemap()
+        xml_attrs = devicemap.get(componentclass)
+        components = self.parsexml(xml, xml_attrs.get('xml_obj_filter'))
         results = {}
         for component in components:
-            id = component.get(xml_id)
+            id = prepId(component.get(xml_attrs.get('xml_obj_id')))
             relation = self.apply_pattern(
-                component.get(xml_relation), xml_rel_pattern
+                component.get(xml_attrs.get('xml_obj_relation'), ''),
+                xml_attrs.get('xml_obj_relation_pattern'),
                 )
-            cmpname = compname + relation if compname else None
+            hrea = component.get(xml_attrs.get('health-reason'), '')
+            hrec = component.get(xml_attrs.get('health-recommendation'), '')
             props = {
-                'compname': cmpname,
-                'relname': relname,
-                'modname': modname,
-                'health': component.get('health'),
-                'health-reason': component.get('health-reason'),
-                'health-recommendation': component.get('health-recommendation'),
-                'status': component.get('status'),
-                'severity': severitys[component.get('health')]
+                'compname': xml_attrs.get('compname', '') + relation,
+                'modname': xml_attrs.get('modname'),
+                'hrea': component.get('health-reason'),
+                'hrec': component.get('health-recommendation'),
+                'data': {
+                    'id': id,
+                    'relname': xml_attrs.get('relname'),
+                },
             }
+            for cond in xml_attrs.get('xml_obj_conditions'):
+                props['data'].update({cond: component.get(cond)})
+
             results[id] = props
 
         return results
