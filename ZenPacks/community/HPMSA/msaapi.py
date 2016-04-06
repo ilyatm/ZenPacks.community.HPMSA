@@ -125,8 +125,10 @@ class msaapi:
                 component.get(xml_attrs.get('xml_obj_relation'), ''),
                 xml_attrs.get('xml_obj_relation_pattern'),
                 )
+
             hrea = component.get(xml_attrs.get('health-reason'), '')
             hrec = component.get(xml_attrs.get('health-recommendation'), '')
+            pdb.set_trace()
             props = {
                 'compname': xml_attrs.get('compname', '') + relation,
                 'modname': xml_attrs.get('modname'),
