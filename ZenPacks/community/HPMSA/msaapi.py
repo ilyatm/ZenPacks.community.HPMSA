@@ -128,7 +128,6 @@ class msaapi:
 
             hrea = component.get(xml_attrs.get('health-reason'), '')
             hrec = component.get(xml_attrs.get('health-recommendation'), '')
-            pdb.set_trace()
             props = {
                 'compname': xml_attrs.get('compname', '') + relation,
                 'modname': xml_attrs.get('modname'),

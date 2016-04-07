@@ -27,9 +27,11 @@ device_classes:
       zPingMonitorIgnore: true
       zCollectorPlugins:
         - community.api.hpmsa
+      zDeviceTemplates:
+        - HPMSAEvents
 
     templates:
-      HPMSADevice:
+      HPMSAEvents:
         description: HP MSA Global Events Template.
         targetPythonClass: ZenPacks.community.HPMSA.HPMSA
         datasources:
