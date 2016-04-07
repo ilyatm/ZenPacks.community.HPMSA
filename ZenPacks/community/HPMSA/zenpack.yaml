@@ -29,6 +29,15 @@ device_classes:
         - community.api.hpmsa
 
     templates:
+      HPMSADevice:
+        description: HP MSA Global Events Template.
+        targetPythonClass: ZenPacks.community.HPMSA.HPMSA
+        datasources:
+          events:
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Events
+            cycletime: "60"
+
       Enclosure:
         description: HP MSA Enclosure Template.
         targetPythonClass: ZenPacks.community.HPMSA.Enclosure
@@ -132,6 +141,9 @@ classes:
   HPMSA:
     base: [zenpacklib.Device]
     label: HP MSA Device
+    properties:
+      product-id:
+        label: MSA Version
 
   Enclosure:
     base: [zenpacklib.Component]
