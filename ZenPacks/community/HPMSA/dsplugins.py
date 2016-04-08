@@ -9,6 +9,8 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
 from Products.DataCollector.plugins.DataMaps import ObjectMap
 from ZenPacks.community.HPMSA.msaapi import msaapi, get_devicemap
 import logging
+from time import time
+from datetime import datetime
 
 LOG = logging.getLogger('zen.HPMSA')
 
@@ -83,7 +85,7 @@ class Conditions(HPMSADS):
                 try:
                     xml = yield getPage(url+cmd, headers=headers)
                 except Exception, e:
-                    log.error("%s: %s", device.id, e)
+                    LOG.error("%s: %s", device.id, e)
                 if xml:
                     results[cc] = api.get_conditions(xml, cc)
 
@@ -116,28 +118,56 @@ class Conditions(HPMSADS):
 class Events(HPMSADS):
 
     TAG = 'Events'
+    severities = {
+        '0': 'Info',
+        '1': 'Warning',
+        '2': 'Error',
+        '3': 'Critical',
+        }
 
     @inlineCallbacks
     def collect(self, config):
         api = self.apiconnect(config)
         url = api.get_url()
         data = self.new_data()
+        ts = time()
+        dt = datetime.fromtimestamp(ts).strftime('%m%d%y%H%M%S')
+        df = datetime.fromtimestamp(ts-86400).strftime('%m%d%y%H%M%S')
         if url is None:
             LOG.error('%s: Can\'t authenticate, check settings...', config)
             data['events'].append({
                 'device': config.id,
                 'severity': 'Error',
                 'eventKey': 'hpmsa-conditions',
-                'eventClassKey': 'hpmsa-conditions',
+                'eventClassKey': 'hpmsa',
                 'summary': 'Can not connect',
                 'message': 'Can not authenticate, check settings...',
                 })
             returnValue(None)
         else:
             headers = api.get_headers()
-
-        for datasource in config.datasources:
-            print datasource
+            try:
+                xml = yield getPage(
+                    url+"events/from/{0}/to/{1}".format(df, dt),
+                    headers=headers
+                    )
+            except Exception, e:
+                LOG.error("%s: %s", device.id, e)
+            if xml:
+                events = api.get_events(xml)
+                for evt in events:
+                    data['events'].append({
+                        'device': config.id,
+                        'severity': self.severities[evt['severity-numeric']],
+                        'eventKey': 'hpmsa-event-'+evt['event-id'],
+                        'eventClassKey': 'hpmsa',
+                        'summary': evt['message'],
+                        'message': "{0} {1} {2}".format(
+                            evt['message'],
+                            evt['additional-information'],
+                            evt['recommended-action'],
+                            )
+                    })
 
         returnValue(data)
 

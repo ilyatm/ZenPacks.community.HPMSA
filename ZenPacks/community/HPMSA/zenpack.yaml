@@ -38,106 +38,117 @@ device_classes:
           events:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Events
-            cycletime: "60"
+            cycletime: "300"
 
       Enclosure:
         description: HP MSA Enclosure Template.
         targetPythonClass: ZenPacks.community.HPMSA.Enclosure
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       PowerSupp:
         description: HP MSA Power Supply Template.
         targetPythonClass: ZenPacks.community.HPMSA.Powersupp
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       Controller:
         description: HP MSA Controller Template.
         targetPythonClass: ZenPacks.community.HPMSA.Controller
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       HardDisk:
         description: HP MSA HDD Template.
         targetPythonClass: ZenPacks.community.HPMSA.HardDisk
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       HostPort:
         description: HP MSA HostPort Template.
         targetPythonClass: ZenPacks.community.HPMSA.HostPort
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       ExpansionPort:
         description: HP MSA Export Template.
         targetPythonClass: ZenPacks.community.HPMSA.Export
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       ManagementPort:
         description: HP MSA Network Port Template.
         targetPythonClass: ZenPacks.community.HPMSA.Nwport
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       IOModule:
         description: HP MSA In/Out Module Template.
         targetPythonClass: ZenPacks.community.HPMSA.Iomod
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       CompactFlash:
         description: HP MSA Compact Flash Module Template.
         targetPythonClass: ZenPacks.community.HPMSA.Compflash
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       VirtualDisk:
         description: HP MSA Virtual Disk Template.
         targetPythonClass: ZenPacks.community.HPMSA.Virtualdisk
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
       Volume:
         description: HP MSA Volume Template.
         targetPythonClass: ZenPacks.community.HPMSA.Volume
         datasources:
           conditions:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
-            cycletime: "60"
+            cycletime: "300"
 
 classes:
   HPMSA:

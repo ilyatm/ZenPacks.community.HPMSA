@@ -95,7 +95,6 @@ class msaapi:
         return results
 
     def parsexml(self, xml, xml_obj_filter):
-
         xml = ET.fromstring(xml)
         results = []
         for xml_object in xml.findall(xml_obj_filter):
@@ -113,6 +112,10 @@ class msaapi:
                 return prepId(m.group(1).upper())
         else:
             return value
+
+    def get_events(self, xml):
+        evf = "./OBJECT[@basetype='events']"
+        return self.parsexml(xml, evf)
 
     def get_conditions(self, xml, componentclass):
         devicemap = get_devicemap()

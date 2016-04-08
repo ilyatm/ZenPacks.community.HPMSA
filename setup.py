@@ -5,7 +5,7 @@
 NAME = "ZenPacks.community.HPMSA"
 VERSION = "1.0.1"
 AUTHOR = "Temnikov Ilya"
-LICENSE = "GPL"
+LICENSE = "GPLv2"
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.community']
 PACKAGES = ['ZenPacks', 'ZenPacks.community', 'ZenPacks.community.HPMSA']
 INSTALL_REQUIRES = []
