@@ -36,6 +36,7 @@ device_classes:
         targetPythonClass: ZenPacks.community.HPMSA.HPMSA
         datasources:
           events:
+            enabled: True
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Events
             cycletime: "300"
@@ -69,6 +70,78 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "300"
+          statistics:
+            enabled: True
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Statistics
+            cycletime: "300"
+            datapoints:
+              cpu-load: GAUGE
+              bytes-per-second-numeric: GAUGE
+              iops: GAUGE
+              number-of-reads: GAUGE
+              read-cache-hits: GAUGE
+              read-cache-misses: GAUGE
+              number-of-writes: GAUGE
+              write-cache-hits: GAUGE
+              write-cache-misses: GAUGE
+              data-read-numeric: GAUGE
+              data-written-numeric: GAUGE
+              total-power-on-hours: GAUGE
+        graphs:
+          CPUs:
+            units: percent
+            miny: 0
+            maxy: 100
+            graphpoints:
+              CPU:
+                dpName: statistics_cpu-load
+                format: "%3.0lf%%"
+          IOPS:
+            units: operation
+            graphpoints:
+              IOPS:
+                dpName: statistics_iops
+                format: "%5.0lf iops"
+          CACHE:
+            units: numbers
+            graphpoints:
+              read cache hits:
+                dpName: statistics_read-cache-hits
+                format: "%7.2lf%s"
+              read cache misses:
+                dpName: statistics_read-cache-misses
+                format: "%7.2lf%s"
+              write cache hits:
+                dpName: statistics_write-cache-hits
+                format: "%7.2lf%s"
+              write cache misses:
+                dpName: statistics_write-cache-misses
+                format: "%7.2lf%s"
+          READ WRITE DATA:
+            units: byte
+            graphpoints:
+              data read:
+                dpName: statistics_data-read-numeric
+                format: "%7.2lf%s"
+              data write:
+                dpName: statistics_data-written-numeric
+                format: "%7.2lf%s"
+          READ WRITE NUMBERS:
+            units: operation
+            graphpoints:
+              reads:
+                dpName: statistics_number-of-reads
+                format: "%7.2lf%s"
+              writes:
+                dpName: statistics_number-of-writes
+                format: "%7.2lf%s"
+          DATA TRANSFER:
+            units: bytes per second
+            graphpoints:
+              datatransfer:
+                dpName: statistics_bytes-per-second-numeric
+                format: "%7.2lf%s"
 
       HardDisk:
         description: HP MSA HDD Template.
@@ -79,6 +152,123 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "300"
+          statistics:
+            enabled: True
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Statistics
+            cycletime: "300"
+            datapoints:
+              bytes-per-second-numeric: GAUGE
+              iops: GAUGE
+              number-of-reads: GAUGE
+              number-of-writes: GAUGE
+              data-read-numeric: GAUGE
+              data-written-numeric: GAUGE
+              queue-depth: GAUGE
+              smart-count-1: GAUGE
+              io-timeout-count-1: GAUGE
+              no-response-count-1: GAUGE
+              spinup-retry-count-1: GAUGE
+              number-of-media-errors-1: GAUGE
+              number-of-nonmedia-errors-1: GAUGE
+              number-of-block-reassigns-1: GAUGE
+              number-of-bad-blocks-1: GAUGE
+              smart-count-2: GAUGE
+              io-timeout-count-2: GAUGE
+              no-response-count-2: GAUGE
+              spinup-retry-count-2: GAUGE
+              number-of-media-errors-2: GAUGE
+              number-of-nonmedia-errors-2: GAUGE
+              number-of-block-reassigns-2: GAUGE
+              number-of-bad-blocks-2: GAUGE
+        graphs:
+          IOPS:
+            units: operation
+            graphpoints:
+              IOPS:
+                dpName: statistics_iops
+                format: "%5.0lf iops"
+          READ WRITE DATA:
+            units: byte
+            graphpoints:
+              data read:
+                dpName: statistics_data-read-numeric
+                format: "%7.2lf%s"
+              data write:
+                dpName: statistics_data-written-numeric
+                format: "%7.2lf%s"
+          READ WRITE NUMBERS:
+            units: operation
+            graphpoints:
+              reads:
+                dpName: statistics_number-of-reads
+                format: "%7.2lf%s"
+              writes:
+                dpName: statistics_number-of-writes
+                format: "%7.2lf%s"
+          QUEUE DEPTH:
+            units: numbers
+            graphpoints:
+              queue:
+                dpName: statistics_bytes-per-second-numeric
+                format: "%7.2lf%s"
+          DATA TRANSFER:
+            units: bytes per second
+            graphpoints:
+              datatransfer:
+                dpName: statistics_bytes-per-second-numeric
+                format: "%7.2lf%s"
+          SMART:
+            units: count
+            graphpoints:
+              smartcount1:
+                dpName: statistics_smart-count-1
+                format: "%7.2lf%s"
+              iotimeoutcount1:
+                dpName: statistics_io-timeout-count-1
+                format: "%7.2lf%s"
+              noresponsecount1:
+                dpName: statistics_no-response-count-1
+                format: "%7.2lf%s"
+              spinupretrycount1:
+                dpName: statistics_spinup-retry-count-1
+                format: "%7.2lf%s"
+              numberofmediaerrors1:
+                dpName: statistics_number-of-media-errors-1
+                format: "%7.2lf%s"
+              numberofnonmediaerrors1:
+                dpName: statistics_number-of-nonmedia-errors-1
+                format: "%7.2lf%s"
+              numberofblockreassigns1:
+                dpName: statistics_number-of-block-reassigns-1
+                format: "%7.2lf%s"
+              numberofbadblocks1:
+                dpName: statistics_number-of-bad-blocks-1
+                format: "%7.2lf%s"
+              smartcount2:
+                dpName: statistics_smart-count-2
+                format: "%7.2lf%s"
+              iotimeoutcount2:
+                dpName: statistics_io-timeout-count-2
+                format: "%7.2lf%s"
+              noresponsecount2:
+                dpName: statistics_no-response-count-2
+                format: "%7.2lf%s"
+              spinupretrycount2:
+                dpName: statistics_spinup-retry-count-2
+                format: "%7.2lf%s"
+              numberofmediaerrors2:
+                dpName: statistics_number-of-media-errors-2
+                format: "%7.2lf%s"
+              numberofnonmediaerrors2:
+                dpName: statistics_number-of-nonmedia-errors-2
+                format: "%7.2lf%s"
+              numberofblockreassigns2:
+                dpName: statistics_number-of-block-reassigns-2
+                format: "%7.2lf%s"
+              numberofbadblocks2:
+                dpName: statistics_number-of-bad-blocks-2
+                format: "%7.2lf%s"
 
       HostPort:
         description: HP MSA HostPort Template.
@@ -89,6 +279,65 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "300"
+          statistics:
+            enabled: True
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Statistics
+            cycletime: "300"
+            datapoints:
+              bytes-per-second-numeric: GAUGE
+              iops: GAUGE
+              number-of-reads: GAUGE
+              number-of-writes: GAUGE
+              data-read-numeric: GAUGE
+              data-written-numeric: GAUGE
+              queue-depth: GAUGE
+              avg-rsp-time: GAUGE
+              avg-read-rsp-time: GAUGE
+              avg-write-rsp-time: GAUGE
+        graphs:
+          IOPS:
+            units: operation
+            graphpoints:
+              IOPS:
+                dpName: statistics_iops
+                format: "%5.0lf iops"
+          READ WRITE DATA:
+            units: byte
+            graphpoints:
+              data read:
+                dpName: statistics_data-read-numeric
+                format: "%7.2lf%s"
+              data write:
+                dpName: statistics_data-written-numeric
+                format: "%7.2lf%s"
+          READ WRITE NUMBERS:
+            units: operation
+            graphpoints:
+              reads:
+                dpName: statistics_number-of-reads
+                format: "%7.2lf%s"
+              writes:
+                dpName: statistics_number-of-writes
+                format: "%7.2lf%s"
+          DATA TRANSFER:
+            units: bytes per second
+            graphpoints:
+              datatransfer:
+                dpName: statistics_bytes-per-second-numeric
+                format: "%7.2lf%s"
+          IO Resp Time:
+            units: numbers
+            graphpoints:
+              Resp Time:
+                dpName: statistics_avg-rsp-time
+                format: "%7.2lf%s"
+              Read Resp Time:
+                dpName: statistics_avg-read-rsp-time
+                format: "%7.2lf%s"
+              Write Resp Time:
+                dpName: statistics_avg-write-rsp-time
+                format: "%7.2lf%s"
 
       ExpansionPort:
         description: HP MSA Export Template.
@@ -139,6 +388,64 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "300"
+          statistics:
+            enabled: True
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Statistics
+            cycletime: "300"
+            datapoints:
+              bytes-per-second-numeric: GAUGE
+              iops: GAUGE
+              number-of-reads: GAUGE
+              number-of-writes: GAUGE
+              data-read-numeric: GAUGE
+              data-written-numeric: GAUGE
+              avg-rsp-time: GAUGE
+              avg-read-rsp-time: GAUGE
+              avg-write-rsp-time: GAUGE
+        graphs:
+          IOPS:
+            units: operation
+            graphpoints:
+              IOPS:
+                dpName: statistics_iops
+                format: "%5.0lf iops"
+          READ WRITE DATA:
+            units: byte
+            graphpoints:
+              data read:
+                dpName: statistics_data-read-numeric
+                format: "%7.2lf%s"
+              data write:
+                dpName: statistics_data-written-numeric
+                format: "%7.2lf%s"
+          READ WRITE NUMBERS:
+            units: operation
+            graphpoints:
+              reads:
+                dpName: statistics_number-of-reads
+                format: "%7.2lf%s"
+              writes:
+                dpName: statistics_number-of-writes
+                format: "%7.2lf%s"
+          IO Resp Time:
+            units: numbers
+            graphpoints:
+              Resp Time:
+                dpName: statistics_avg-rsp-time
+                format: "%7.2lf%s"
+              Read Resp Time:
+                dpName: statistics_avg-read-rsp-time
+                format: "%7.2lf%s"
+              Write Resp Time:
+                dpName: statistics_avg-write-rsp-time
+                format: "%7.2lf%s"
+          DATA TRANSFER:
+            units: bytes per second
+            graphpoints:
+              datatransfer:
+                dpName: statistics_bytes-per-second-numeric
+                format: "%7.2lf%s"
 
       Volume:
         description: HP MSA Volume Template.
@@ -149,6 +456,70 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "300"
+          statistics:
+            enabled: True
+            type: Python
+            plugin_classname: ZenPacks.community.HPMSA.dsplugins.Statistics
+            cycletime: "300"
+            datapoints:
+              bytes-per-second-numeric: GAUGE
+              iops: GAUGE
+              number-of-reads: GAUGE
+              number-of-writes: GAUGE
+              data-read-numeric: GAUGE
+              data-written-numeric: GAUGE
+              read-cache-hits: GAUGE
+              read-cache-misses: GAUGE
+              write-cache-hits: GAUGE
+              write-cache-misses: GAUGE
+              small-destages: GAUGE
+              full-stripe-write-destages: GAUGE
+              read-ahead-operations: GAUGE
+              write-cache-space: GAUGE
+              write-cache-percent: GAUGE
+        graphs:
+          IOPS:
+            units: operation
+            graphpoints:
+              IOPS:
+                dpName: statistics_iops
+                format: "%5.0lf iops"
+          READ WRITE DATA:
+            units: byte
+            graphpoints:
+              data read:
+                dpName: statistics_data-read-numeric
+                format: "%7.2lf%s"
+              data write:
+                dpName: statistics_data-written-numeric
+                format: "%7.2lf%s"
+          READ WRITE NUMBERS:
+            units: operation
+            graphpoints:
+              reads:
+                dpName: statistics_number-of-reads
+                format: "%7.2lf%s"
+              writes:
+                dpName: statistics_number-of-writes
+                format: "%7.2lf%s"
+          Destages:
+            units: numbers
+            graphpoints:
+              Small Destages:
+                dpName: statistics_small-destages
+                format: "%7.2lf%s"
+              Full Stripe Write Destages:
+                dpName: statistics_full-stripe-write-destages
+                format: "%7.2lf%s"
+              Read Ahead Operations:
+                dpName: statistics_read-ahead-operations
+                format: "%7.2lf%s"
+          DATA TRANSFER:
+            units: bytes per second
+            graphpoints:
+              datatransfer:
+                dpName: statistics_bytes-per-second-numeric
+                format: "%7.2lf%s"
 
 classes:
   HPMSA:

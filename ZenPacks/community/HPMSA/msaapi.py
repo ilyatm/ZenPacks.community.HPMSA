@@ -5,22 +5,7 @@ import re
 import os
 import xml.etree.ElementTree as ET
 from Products.ZenUtils.Utils import prepId
-import pdb
 from pprint import pprint
-
-modeller_order = [
-    'Enclosure',
-    'Controller',
-    'VirtualDisk',
-    'PowerSupp',
-    'HardDisk',
-    'Volume',
-    'HostPort',
-    'ExpansionPort',
-    'ManagementPort',
-    'InoutModule',
-    'CompactFlash'
-    ]
 
 
 def get_devicemap():
@@ -146,4 +131,17 @@ class msaapi:
 
             results[id] = props
 
+        return results
+
+    def get_statistics(self, xml, componentclass):
+        devicemap = get_devicemap()
+        xml_attrs = devicemap.get(componentclass)
+        components = self.parsexml(xml, xml_attrs.get('xml_stat_filter'))
+        results = {}
+        for component in components:
+            id = self.apply_pattern(
+                component.get(xml_attrs.get('xml_stat_id')),
+                xml_attrs.get('xml_stat_id_pattern'),
+                )
+            results[id] = component
         return results

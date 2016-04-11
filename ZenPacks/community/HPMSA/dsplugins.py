@@ -8,9 +8,10 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
     )
 from Products.DataCollector.plugins.DataMaps import ObjectMap
 from ZenPacks.community.HPMSA.msaapi import msaapi, get_devicemap
-import logging
 from time import time
 from datetime import datetime
+import logging
+
 
 LOG = logging.getLogger('zen.HPMSA')
 
@@ -172,9 +173,17 @@ class Events(HPMSADS):
         returnValue(data)
 
 
-class Statistic(HPMSADS):
+class Statistics(HPMSADS):
 
-    TAG = 'Statistic'
+    TAG = 'Statistics'
+
+    statistics_map = [
+        'Controller',
+        'HardDisk',
+        'HostPort',
+        'Volume',
+        'VirtualDisk',
+    ]
 
     @inlineCallbacks
     def collect(self, config):
@@ -194,8 +203,24 @@ class Statistic(HPMSADS):
             returnValue(None)
         else:
             headers = api.get_headers()
+            devicemap = get_devicemap()
+            results = {}
+            for cc in self.statistics_map:
+                cmd = devicemap.get(cc).get('xml_stat_command')
+                try:
+                    xml = yield getPage(url+cmd, headers=headers)
+                except Exception, e:
+                    # LOG.error("%s: %s", device.id, e)
+                    LOG.error(e)
+                if xml:
+                    results[cc] = api.get_statistics(xml, cc)
+
+            # pprint(results)
 
         for datasource in config.datasources:
-            print datasource
+            dt, dc = datasource.template, datasource.component
+            # print dt, dc
+            for dp in datasource.points:
+                data['values'][dc][dp.id] = results.get(dt).get(dc).get(dp.id)
 
         returnValue(data)

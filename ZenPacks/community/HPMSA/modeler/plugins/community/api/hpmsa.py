@@ -3,11 +3,7 @@ from Products.DataCollector.plugins.DataMaps import RelationshipMap, ObjectMap
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.web.client import getPage
 from pprint import pprint
-from ZenPacks.community.HPMSA.msaapi import (
-    msaapi,
-    get_devicemap,
-    modeller_order,
-    )
+from ZenPacks.community.HPMSA.msaapi import msaapi, get_devicemap
 import pdb
 
 
@@ -21,6 +17,20 @@ class hpmsa(PythonPlugin):
         'zHPMSAPassword',
         'zHPMSASecureConnection',
         )
+
+    modeller_order = [
+        'Enclosure',
+        'Controller',
+        'VirtualDisk',
+        'PowerSupp',
+        'HardDisk',
+        'Volume',
+        'HostPort',
+        'ExpansionPort',
+        'ManagementPort',
+        'InoutModule',
+        'CompactFlash'
+        ]
 
     deviceProperties = PythonPlugin.deviceProperties + requiredProperties
 
@@ -83,7 +93,7 @@ class hpmsa(PythonPlugin):
         rm.append(ObjectMap({
             'product-id': results['product-id']
         }))
-        for key in modeller_order:
+        for key in self.modeller_order:
             m = results.get(key)
             for r, c in m.items():
                 if r:
