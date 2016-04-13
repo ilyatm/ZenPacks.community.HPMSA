@@ -522,6 +522,9 @@ device_classes:
                 format: "%7.2lf%s"
 
 classes:
+  DEFAULTS:
+    base: [zenpacklib.Component]
+
   HPMSA:
     base: [zenpacklib.Device]
     label: HP MSA Device
@@ -530,9 +533,15 @@ classes:
         label: MSA Version
 
   Enclosure:
-    base: [zenpacklib.Component]
     label: Enclosure
     order: 10
+    relationships:
+      expansionPorts:
+        grid_display: false
+        details_display: false
+      powerSupps:
+        grid_display: false
+        details_display: false
     properties:
       enclosure-wwn:
         label: WWN
@@ -546,7 +555,6 @@ classes:
         order: 85
 
   PowerSupp:
-    base: [zenpacklib.Component]
     label: Power Supp
     order: 12
     properties:
@@ -558,7 +566,6 @@ classes:
         order: 85
 
   Controller:
-    base: [zenpacklib.Component]
     label: Controller
     order: 11
     properties:
@@ -574,7 +581,6 @@ classes:
         order: 85
 
   HardDisk:
-    base: [zenpacklib.Component]
     label: Hard Disk
     order: 13
     properties:
@@ -587,7 +593,6 @@ classes:
         order: 85
 
   HostPort:
-    base: [zenpacklib.Component]
     label: Host Port
     order: 19
     properties:
@@ -603,7 +608,6 @@ classes:
         order: 85
 
   ExpansionPort:
-    base: [zenpacklib.Component]
     label: Expansion Port
     order: 18
     properties:
@@ -617,7 +621,6 @@ classes:
         order: 85
 
   ManagementPort:
-    base: [zenpacklib.Component]
     label: Management Port
     order: 17
     properties:
@@ -630,7 +633,6 @@ classes:
         order: 85
 
   InoutModule:
-    base: [zenpacklib.Component]
     label: IO Module
     order: 16
     properties:
@@ -644,7 +646,6 @@ classes:
         order: 85
 
   CompactFlash:
-    base: [zenpacklib.Component]
     label: Compact Flash
     order: 20
     properties:
@@ -658,7 +659,6 @@ classes:
         order: 85
 
   VirtualDisk:
-    base: [zenpacklib.Component]
     label: Virtual Disk
     order: 14
     properties:
@@ -674,7 +674,6 @@ classes:
         order: 85
 
   Volume:
-    base: [zenpacklib.Component]
     label: Volume
     order: 15
     properties:

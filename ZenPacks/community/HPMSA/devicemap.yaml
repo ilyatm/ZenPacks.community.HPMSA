@@ -7,20 +7,16 @@ CompactFlash:
   xml_obj_filter: ./OBJECT[@basetype='controllers']/OBJECT[@basetype='compact-flash']
   xml_obj_id: durable-id
   xml_obj_relation: controller-id
-  # xml_obj_relation_pattern: null
   xml_obj_title: name
   xml_obj_conditions: [status, health]
 
 Controller:
-  # compname: null
   modname: ZenPacks.community.HPMSA.Controller
   relname: controllers
   xml_obj_attributes: [description]
   xml_obj_command: controllers
   xml_obj_filter: ./OBJECT[@basetype='controllers']
   xml_obj_id: controller-id
-  # xml_obj_relation: ""
-  # xml_obj_relation_pattern: null
   xml_obj_title: durable-id
   xml_obj_conditions: [status, health]
   xml_stat_command: controller-statistics
@@ -29,15 +25,12 @@ Controller:
   xml_stat_id_pattern: controller_([A-Z])
 
 Enclosure:
-  # compname: null
   modname: ZenPacks.community.HPMSA.Enclosure
   relname: enclosures
   xml_obj_attributes: [enclosure-wwn, description]
   xml_obj_command: enclosures
   xml_obj_filter: ./OBJECT[@basetype='enclosures']
   xml_obj_id: enclosure-id
-  # xml_obj_relation: ""
-  # xml_obj_relation_pattern: null
   xml_obj_title: durable-id
   xml_obj_conditions: [status, health]
 
@@ -50,7 +43,6 @@ ExpansionPort:
   xml_obj_filter: ./OBJECT[@basetype='expander-ports']
   xml_obj_id: durable-id
   xml_obj_relation: enclosure-id
-  # xml_obj_relation_pattern: null
   xml_obj_title: durable-id
   xml_obj_conditions: [status, health]
 
@@ -63,7 +55,6 @@ HardDisk:
   xml_obj_filter: ./OBJECT[@name='drive']
   xml_obj_id: durable-id
   xml_obj_relation: enclosure-id
-  # xml_obj_relation_pattern: null
   xml_obj_title: durable-id
   xml_obj_conditions: [health]
   xml_stat_command: disk-statistics
@@ -80,7 +71,6 @@ HostPort:
   xml_obj_filter: ./OBJECT[@basetype='port']
   xml_obj_id: durable-id
   xml_obj_relation: controller
-  # xml_obj_relation_pattern: null
   xml_obj_title: durable-id
   xml_obj_conditions: [status, health]
   xml_stat_command: host-port-statistics
@@ -128,35 +118,27 @@ PowerSupp:
   xml_obj_conditions: [status, health]
 
 VirtualDisk:
-  # compname: null
   modname: ZenPacks.community.HPMSA.VirtualDisk
   relname: virtualDisks
   xml_obj_attributes: [size, raidtype]
   xml_obj_command: vdisks
   xml_obj_filter: ./OBJECT[@basetype='virtual-disks']
   xml_obj_id: name
-  # xml_obj_relation: ""
-  # xml_obj_relation_pattern: null
   xml_obj_title: name
   xml_obj_conditions: [status, health]
   xml_stat_command: vdisk-statistics
   xml_stat_filter: ./OBJECT[@basetype='vdisk-statistics']
   xml_stat_id: name
-  # xml_stat_id_pattern: null
 
 Volume:
-  # compname: null
   modname: ZenPacks.community.HPMSA.Volume
   relname: volumes
   xml_obj_attributes: [size, owner]
   xml_obj_command: volumes
   xml_obj_filter: ./OBJECT[@basetype='volumes']
   xml_obj_id: volume-name
-  # xml_obj_relation: ""
-  # xml_obj_relation_pattern: null
   xml_obj_title: volume-name
   xml_obj_conditions: [health]
   xml_stat_command: volume-statistics
   xml_stat_filter: ./OBJECT[@basetype='volume-statistics']
   xml_stat_id: volume-name
-  # xml_stat_id_pattern: null

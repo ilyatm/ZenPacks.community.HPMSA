@@ -1,7 +1,6 @@
+import logging
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.web.client import getPage
-from pprint import pprint
-
 from datetime import datetime
 from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
     PythonDataSourcePlugin,
@@ -10,7 +9,6 @@ from Products.DataCollector.plugins.DataMaps import ObjectMap
 from ZenPacks.community.HPMSA.msaapi import msaapi, get_devicemap
 from time import time
 from datetime import datetime
-import logging
 
 
 LOG = logging.getLogger('zen.HPMSA')
@@ -210,17 +208,15 @@ class Statistics(HPMSADS):
                 try:
                     xml = yield getPage(url+cmd, headers=headers)
                 except Exception, e:
-                    # LOG.error("%s: %s", device.id, e)
                     LOG.error(e)
                 if xml:
                     results[cc] = api.get_statistics(xml, cc)
 
-            # pprint(results)
-
         for datasource in config.datasources:
             dt, dc = datasource.template, datasource.component
-            # print dt, dc
             for dp in datasource.points:
-                data['values'][dc][dp.id] = results.get(dt).get(dc).get(dp.id)
+                val = results.get(dt, {}).get(dc, {}).get(dp.id)
+                if val:
+                    data['values'][dc][dp.id] = val
 
         returnValue(data)

@@ -2,9 +2,7 @@ from Products.DataCollector.plugins.CollectorPlugin import PythonPlugin
 from Products.DataCollector.plugins.DataMaps import RelationshipMap, ObjectMap
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.web.client import getPage
-from pprint import pprint
 from ZenPacks.community.HPMSA.msaapi import msaapi, get_devicemap
-import pdb
 
 
 class hpmsa(PythonPlugin):
@@ -85,7 +83,6 @@ class hpmsa(PythonPlugin):
                     results[componentclass] = api.get_relation(
                         xml, componentclass
                         )
-            # pprint(results)
             returnValue(results)
 
     def process(self, device, results, log):

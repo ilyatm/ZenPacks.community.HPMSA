@@ -5,7 +5,6 @@ import re
 import os
 import xml.etree.ElementTree as ET
 from Products.ZenUtils.Utils import prepId
-from pprint import pprint
 
 
 def get_devicemap():
