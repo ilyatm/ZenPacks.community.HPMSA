@@ -53,7 +53,7 @@ device_classes:
 
       PowerSupp:
         description: HP MSA Power Supply Template.
-        targetPythonClass: ZenPacks.community.HPMSA.Powersupp
+        targetPythonClass: ZenPacks.community.HPMSA.PowerSupp
         datasources:
           conditions:
             enabled: True
@@ -341,7 +341,7 @@ device_classes:
 
       ExpansionPort:
         description: HP MSA Export Template.
-        targetPythonClass: ZenPacks.community.HPMSA.Export
+        targetPythonClass: ZenPacks.community.HPMSA.ExpansionPort
         datasources:
           conditions:
             enabled: True
@@ -351,7 +351,7 @@ device_classes:
 
       ManagementPort:
         description: HP MSA Network Port Template.
-        targetPythonClass: ZenPacks.community.HPMSA.Nwport
+        targetPythonClass: ZenPacks.community.HPMSA.ManagementPort
         datasources:
           conditions:
             enabled: True
@@ -359,7 +359,7 @@ device_classes:
             plugin_classname: ZenPacks.community.HPMSA.dsplugins.Conditions
             cycletime: "300"
 
-      IOModule:
+      InoutModule:
         description: HP MSA In/Out Module Template.
         targetPythonClass: ZenPacks.community.HPMSA.InoutModule
         datasources:
@@ -371,7 +371,7 @@ device_classes:
 
       CompactFlash:
         description: HP MSA Compact Flash Module Template.
-        targetPythonClass: ZenPacks.community.HPMSA.Compflash
+        targetPythonClass: ZenPacks.community.HPMSA.CompactFlash
         datasources:
           conditions:
             enabled: True
@@ -381,7 +381,7 @@ device_classes:
 
       VirtualDisk:
         description: HP MSA Virtual Disk Template.
-        targetPythonClass: ZenPacks.community.HPMSA.Virtualdisk
+        targetPythonClass: ZenPacks.community.HPMSA.VirtualDisk
         datasources:
           conditions:
             enabled: True
@@ -633,7 +633,7 @@ classes:
         order: 85
 
   InoutModule:
-    label: IO Module
+    label: Inout Module
     order: 16
     properties:
       description:
