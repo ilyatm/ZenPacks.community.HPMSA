@@ -84,7 +84,7 @@ class Conditions(HPMSADS):
                 try:
                     xml = yield getPage(url+cmd, headers=headers)
                 except Exception, e:
-                    LOG.error("%s: %s", device.id, e)
+                    LOG.error(e)
                 if xml:
                     results[cc] = api.get_conditions(xml, cc)
 

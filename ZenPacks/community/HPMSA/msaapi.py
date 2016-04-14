@@ -26,8 +26,8 @@ class msaapi:
                 keypage = urllib2.urlopen(url, timeout=10)
 
             except urllib2.URLError, e:
-                log.error('Controller ip - {0}, \
-                            exception {1} get next.'.format(ip, e))
+                log.error('Controller ip - {0},'\
+                    'exception {1} get next.'.format(ip, e))
                 continue
 
             response = ET.fromstring(keypage.read())[0][2].text

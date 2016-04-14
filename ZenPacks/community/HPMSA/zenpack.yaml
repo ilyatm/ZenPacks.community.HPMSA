@@ -361,7 +361,7 @@ device_classes:
 
       IOModule:
         description: HP MSA In/Out Module Template.
-        targetPythonClass: ZenPacks.community.HPMSA.Iomod
+        targetPythonClass: ZenPacks.community.HPMSA.InoutModule
         datasources:
           conditions:
             enabled: True
