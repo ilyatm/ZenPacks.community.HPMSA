@@ -35,6 +35,10 @@ class msaapi:
             if response != 'Authentication Unsuccessful':
                 self.url = '{0}://{1}/api/show/'.format(protocol, ip)
                 self.headers = {"sessionKey": response}
+                self.headers = {
+                    "Cookie": "wbisessionkey={0}; wbiusername={1}"
+                    .format(response, user)
+                    }
                 break
             else:
                 log.error("{0}. Check username, password.".format(response))
