@@ -131,7 +131,7 @@ class Events(HPMSADS):
         data = self.new_data()
         ts = time()
         dt = datetime.fromtimestamp(ts).strftime('%m%d%y%H%M%S')
-        df = datetime.fromtimestamp(ts-86400).strftime('%m%d%y%H%M%S')
+        df = datetime.fromtimestamp(ts-3600).strftime('%m%d%y%H%M%S')
         if url is None:
             LOG.error('%s: Can\'t authenticate, check settings...', config)
             data['events'].append({
