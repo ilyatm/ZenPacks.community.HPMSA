@@ -50,7 +50,7 @@ class HPMSADS(PythonDataSourcePlugin):
 
 class Conditions(HPMSADS):
 
-    TAG = 'conditions'
+    TAG = 'Conditions'
     severities = {
         'Degraded': 'Error',
         'Fault': 'Critical',
