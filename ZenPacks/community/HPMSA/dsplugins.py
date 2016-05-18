@@ -69,8 +69,8 @@ class Conditions(HPMSADS):
             data['events'].append({
                 'device': config.id,
                 'severity': 'Error',
-                'eventKey': 'hpmsa-conditions',
-                'eventClassKey': 'hpmsa',
+                'eventKey': 'hpmsa-connection',
+                'eventClassKey': 'hpmsa-connection',
                 'summary': 'Can not connect',
                 'message': 'Can not authenticate, check settings...',
                 })
@@ -106,7 +106,7 @@ class Conditions(HPMSADS):
                     'component': datasource.component,
                     'severity': self.severities[health],
                     'eventKey': 'hpmsa-conditions',
-                    'eventClassKey': 'hpmsa',
+                    'eventClassKey': 'hpmsa-conditions',
                     'summary': results[dt][dc]['hrea'],
                     'message': results[dt][dc]['hrec'],
                     })
@@ -137,8 +137,8 @@ class Events(HPMSADS):
             data['events'].append({
                 'device': config.id,
                 'severity': 'Error',
-                'eventKey': 'hpmsa-events',
-                'eventClassKey': 'hpmsa',
+                'eventKey': 'hpmsa-connection',
+                'eventClassKey': 'hpmsa-connection',
                 'summary': 'Can not connect',
                 'message': 'Can not authenticate, check settings...',
                 })
@@ -159,7 +159,7 @@ class Events(HPMSADS):
                         'device': config.id,
                         'severity': self.severities[evt['severity-numeric']],
                         'eventKey': 'hpmsa-events-'+evt['event-id'],
-                        'eventClassKey': 'hpmsa',
+                        'eventClassKey': 'hpmsa-events',
                         'summary': evt['message'],
                         'message': "{0} {1} {2}".format(
                             evt['message'],
@@ -193,8 +193,8 @@ class Statistics(HPMSADS):
             data['events'].append({
                 'device': config.id,
                 'severity': 'Error',
-                'eventKey': 'hpmsa-statistics',
-                'eventClassKey': 'hpmsa',
+                'eventKey': 'hpmsa-connection',
+                'eventClassKey': 'hpmsa-connection',
                 'summary': 'Can not connect',
                 'message': 'Can not authenticate, check settings...',
                 })
