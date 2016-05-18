@@ -104,7 +104,7 @@ class Conditions(HPMSADS):
                 data['events'].append({
                     'device': config.id,
                     'component': datasource.component,
-                    'severity': self.severities[health],
+                    'severity': self.severities.get(health, 'N/A'),
                     'eventKey': 'hpmsa-conditions',
                     'eventClassKey': 'hpmsa-conditions',
                     'summary': results[dt][dc]['hrea'],
@@ -163,8 +163,8 @@ class Events(HPMSADS):
                         'summary': evt['message'],
                         'message': "{0} {1} {2}".format(
                             evt['message'],
-                            evt['additional-information'],
-                            evt['recommended-action'],
+                            evt.get('additional-information', ''),
+                            evt.get('recommended-action', ''),
                             )
                     })
 
