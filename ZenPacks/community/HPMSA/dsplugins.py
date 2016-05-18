@@ -70,7 +70,7 @@ class Conditions(HPMSADS):
                 'device': config.id,
                 'severity': 'Error',
                 'eventKey': 'hpmsa-conditions',
-                'eventClassKey': 'hpmsa-conditions',
+                'eventClassKey': 'hpmsa',
                 'summary': 'Can not connect',
                 'message': 'Can not authenticate, check settings...',
                 })
@@ -137,7 +137,7 @@ class Events(HPMSADS):
             data['events'].append({
                 'device': config.id,
                 'severity': 'Error',
-                'eventKey': 'hpmsa-conditions',
+                'eventKey': 'hpmsa-events',
                 'eventClassKey': 'hpmsa',
                 'summary': 'Can not connect',
                 'message': 'Can not authenticate, check settings...',
@@ -158,7 +158,7 @@ class Events(HPMSADS):
                     data['events'].append({
                         'device': config.id,
                         'severity': self.severities[evt['severity-numeric']],
-                        'eventKey': 'hpmsa-event-'+evt['event-id'],
+                        'eventKey': 'hpmsa-events-'+evt['event-id'],
                         'eventClassKey': 'hpmsa',
                         'summary': evt['message'],
                         'message': "{0} {1} {2}".format(
@@ -193,8 +193,8 @@ class Statistics(HPMSADS):
             data['events'].append({
                 'device': config.id,
                 'severity': 'Error',
-                'eventKey': 'hpmsa-conditions',
-                'eventClassKey': 'hpmsa-conditions',
+                'eventKey': 'hpmsa-statistics',
+                'eventClassKey': 'hpmsa',
                 'summary': 'Can not connect',
                 'message': 'Can not authenticate, check settings...',
                 })
