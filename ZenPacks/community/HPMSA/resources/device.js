@@ -6,7 +6,7 @@ Ext.onReady(function() {
 
         overview.addField({
             name: 'product-id',
-            fieldLabel: _t('# MSA Version')
+            fieldLabel: _t('MSA Version')
         });
     });
 });
