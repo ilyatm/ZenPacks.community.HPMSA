@@ -99,12 +99,11 @@ class Conditions(HPMSADS):
                 ))
 
             health = results[dt][dc]['data']['health']
-            severity = self.severities[health]
-            if health != 'OK':
+            if health and health != 'OK':
                 data['events'].append({
                     'device': config.id,
                     'component': datasource.component,
-                    'severity': self.severities.get(health, 'N/A'),
+                    'severity': self.severities[health],
                     'eventKey': 'hpmsa-conditions',
                     'eventClassKey': 'hpmsa-conditions',
                     'summary': results[dt][dc]['hrea'],
