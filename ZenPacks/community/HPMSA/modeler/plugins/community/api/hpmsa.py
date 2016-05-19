@@ -1,5 +1,5 @@
 from Products.DataCollector.plugins.CollectorPlugin import PythonPlugin
-from Products.DataCollector.plugins.DataMaps import RelationshipMap, ObjectMap
+from Products.DataCollector.plugins.DataMaps import RelationshipMap, ObjectMap, MultiArgs
 from twisted.internet.defer import inlineCallbacks, returnValue
 from twisted.web.client import getPage
 from ZenPacks.community.HPMSA.msaapi import msaapi, get_devicemap
@@ -88,7 +88,8 @@ class hpmsa(PythonPlugin):
     def process(self, device, results, log):
         rm = []
         rm.append(ObjectMap({
-            'product-id': results['product-id']
+            'product-id': results['product-id'],
+            'setHWProductKey': MultiArgs(results['product-id'], "HP")
         }))
         for key in self.modeller_order:
             m = results.get(key)
