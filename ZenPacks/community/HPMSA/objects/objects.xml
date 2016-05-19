@@ -1,0 +1,47 @@
+<objects>
+<!-- ('', 'zport', 'dmd', 'Events', 'Storage', 'HPMSA') -->
+<object id="/zport/dmd/Events/Storage/HPMSA" module="Products.ZenEvents.EventClass" class="EventClass">
+<property visible="True" type="int" id="zFlappingSeverity">
+-1
+</property>
+<property visible="True" type="int" id="zEventSeverity">
+-1
+</property>
+<object id="Events" module="Products.ZenEvents.EventClass" class="EventClass">
+<tomanycont id="instances">
+<object id="hpmsa-events" module="Products.ZenEvents.EventClassInst" class="EventClassInst">
+<property type="string" id="eventClassKey" mode="w">
+hpmsa-events
+</property>
+<property type="int" id="sequence" mode="w">
+7
+</property>
+</object>
+</tomanycont>
+</object>
+<object id="Conditions" module="Products.ZenEvents.EventClass" class="EventClass">
+<tomanycont id="instances">
+<object id="hpmsa-conditions" module="Products.ZenEvents.EventClassInst" class="EventClassInst">
+<property type="string" id="eventClassKey" mode="w">
+hpmsa-conditions
+</property>
+<property type="int" id="sequence" mode="w">
+7
+</property>
+</object>
+</tomanycont>
+</object>
+<object id="Connection" module="Products.ZenEvents.EventClass" class="EventClass">
+<tomanycont id="instances">
+<object id="hpmsa-connection" module="Products.ZenEvents.EventClassInst" class="EventClassInst">
+<property type="string" id="eventClassKey" mode="w">
+hpmsa-connection
+</property>
+<property type="int" id="sequence" mode="w">
+7
+</property>
+</object>
+</tomanycont>
+</object>
+</object>
+</objects>
