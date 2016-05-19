@@ -56,7 +56,7 @@ class Conditions(HPMSADS):
         'Fault': 'Critical',
         'Unknown': 'Warning',
         'N/A': 'Info',
-        'OK': None,
+        'OK': 'Clear',
         }
 
     @inlineCallbacks
@@ -99,12 +99,11 @@ class Conditions(HPMSADS):
                 ))
 
             health = results[dt][dc]['data']['health']
-            severity = self.severities[health]
-            if health != 'OK':
+            if results[dt][dc]['hrea'] is not None:
                 data['events'].append({
                     'device': config.id,
                     'component': datasource.component,
-                    'severity': self.severities.get(health, 'N/A'),
+                    'severity': self.severities.get(health, 'Info'),
                     'eventKey': 'hpmsa-conditions',
                     'eventClassKey': 'hpmsa-conditions',
                     'summary': results[dt][dc]['hrea'],
